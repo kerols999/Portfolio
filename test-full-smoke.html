@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html>
+<body style="margin:0;background:#000;">
+<canvas id="c" width="600" height="400"></canvas>
+<pre id="res"></pre>
+<script>
+  const canvas = document.getElementById('c');
+  const gl = canvas.getContext('webgl', { alpha: false, antialias: false });
+
+  const vsSource = `
+    attribute vec2 a_pos;
+    varying vec2 v_uv;
+    void main() {
+      v_uv = (a_pos + 1.0) * 0.5;
+      gl_Position = vec4(a_pos, 0.0, 1.0);
+    }
+  `;
+
+  const fsSource = `
+    precision highp float;
+    varying vec2 v_uv;
+    uniform vec2 u_resolution;
+    uniform vec2 u_mouse;
+    uniform vec2 u_mouse_vel;
+    uniform float u_time;
+    uniform vec4 u_splats[12]; // x, y, age (0..1), intensity
+
+    vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+    vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+    vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+
+    float snoise(vec2 v) {
+      const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+      vec2 i  = floor(v + dot(v, C.yy));
+      vec2 x0 = v -   i + dot(i, C.xx);
+      vec2 i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+      vec4 x12 = x0.xyxy + C.xxzz;
+      x12.xy -= i1;
+      i = mod289(i);
+      vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+      vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
+      m = m*m; m = m*m;
+      vec3 x = 2.0 * fract(p * C.www) - 1.0;
+      vec3 h = abs(x) - 0.5;
+      vec3 ox = floor(x + 0.5);
+      vec3 a0 = x - ox;
+      m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
+      vec3 g;
+      g.x  = a0.x  * x0.x  + h.x  * x0.y;
+      g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+      return 130.0 * dot(m, g);
+    }
+
+    vec2 curlNoise(vec2 p) {
+      const float e = 0.015;
+      float n1 = snoise(p + vec2(0.0, e));
+      float n2 = snoise(p - vec2(0.0, e));
+      float n3 = snoise(p + vec2(e, 0.0));
+      float n4 = snoise(p - vec2(e, 0.0));
+      return vec2((n1 - n2) / (2.0 * e), -(n3 - n4) / (2.0 * e));
+    }
+
+    void main() {
+      vec2 uv = v_uv;
+      float aspect = u_resolution.x / u_resolution.y;
+      vec2 p = uv;
+      p.x *= aspect;
+
+      // Flow fields for curl vorticity
+      vec2 flow1 = curlNoise(p * 1.4 + vec2(u_time * 0.04, -u_time * 0.03));
+      vec2 flow2 = curlNoise(p * 2.8 - flow1 * 0.4 + vec2(-u_time * 0.02, u_time * 0.025));
+      vec2 warpedP = p + (flow1 * 0.2 + flow2 * 0.1);
+
+      // Mouse position and velocity wake
+      vec2 mouseP = vec2(u_mouse.x * aspect, u_mouse.y);
+      vec2 toCursor = warpedP - mouseP;
+      float cursorDist = length(toCursor);
+
+      float cursorFalloff = 1.0 - smoothstep(0.0, 0.38, cursorDist);
+      warpedP += u_mouse_vel * cursorFalloff * 0.5;
+
+      float smoke = 0.0;
+      float glow = 0.0;
+
+      // Cursor active halo
+      smoke += cursorFalloff * 0.45;
+      glow += cursorFalloff * (0.3 + length(u_mouse_vel) * 2.5);
+
+      // Splat trails (12 dynamic smoke emitters)
+      for (int i = 0; i < 12; i++) {
+        vec4 splat = u_splats[i];
+        if (splat.w > 0.01) {
+          vec2 splatP = vec2(splat.x * aspect, splat.y);
+          vec2 offset = (warpedP - splatP) - flow1 * (splat.z * 0.22);
+          float d = length(offset);
+
+          float radius = 0.08 + splat.z * 0.32;
+          float life = (1.0 - splat.z) * splat.w;
+
+          float puff = (1.0 - smoothstep(0.0, radius, d)) * life;
+          float billow = snoise(offset * 6.5 + vec2(u_time * 0.12, 0.0)) * 0.5 + 0.5;
+          smoke += puff * (0.6 + 0.4 * billow);
+          glow += (1.0 - smoothstep(0.0, radius * 1.8, d)) * life * 0.4;
+        }
+      }
+
+      // Ambient background smoke
+      float ambient1 = (snoise(warpedP * 1.8 + vec2(u_time * 0.025, 0.0)) * 0.5 + 0.5) * 0.16;
+      float ambient2 = (snoise(warpedP * 3.6 - vec2(0.0, u_time * 0.035)) * 0.5 + 0.5) * 0.08;
+      smoke = max(smoke, ambient1 + ambient2);
+
+      // Colors: Pure Black -> Dark Blue -> Deep Teal -> Luminous Teal -> Radiant Cyan
+      vec3 cBlack     = vec3(0.0, 0.0, 0.0);
+      vec3 cDarkBlue  = vec3(0.015, 0.065, 0.18);
+      vec3 cDeepTeal  = vec3(0.025, 0.32, 0.44);
+      vec3 cTealGlow  = vec3(0.20, 0.82, 0.95);
+      vec3 cBrightCyan = vec3(0.65, 0.96, 1.0);
+
+      vec3 col = mix(cBlack, cDarkBlue, clamp(smoke * 1.8, 0.0, 1.0));
+      col = mix(col, cDeepTeal, clamp((smoke - 0.12) * 2.2, 0.0, 1.0));
+      col = mix(col, cTealGlow, clamp((smoke - 0.35) * 2.8 + glow * 0.45, 0.0, 1.0));
+      col = mix(col, cBrightCyan, clamp((smoke - 0.65) * 3.5 + glow * 0.4, 0.0, 1.0));
+
+      gl_FragColor = vec4(col, 1.0);
+    }
+  `;
+
+  const vs = gl.createShader(gl.VERTEX_SHADER);
+  gl.shaderSource(vs, vsSource);
+  gl.compileShader(vs);
+
+  const fs = gl.createShader(gl.FRAGMENT_SHADER);
+  gl.shaderSource(fs, fsSource);
+  gl.compileShader(fs);
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog, vs);
+  gl.attachShader(prog, fs);
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, -1,1, 1,-1, 1,1]), gl.STATIC_DRAW);
+
+  const aPos = gl.getAttribLocation(prog, 'a_pos');
+  gl.enableVertexAttribArray(aPos);
+  gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+  gl.uniform2f(gl.getUniformLocation(prog, 'u_resolution'), 600, 400);
+  gl.uniform2f(gl.getUniformLocation(prog, 'u_mouse'), 0.5, 0.5);
+  gl.uniform2f(gl.getUniformLocation(prog, 'u_mouse_vel'), 0.08, 0.06);
+  gl.uniform1f(gl.getUniformLocation(prog, 'u_time'), 1.5);
+
+  const splats = new Float32Array(12 * 4);
+  splats[0] = 0.5; splats[1] = 0.5; splats[2] = 0.2; splats[3] = 1.0;
+  gl.uniform4fv(gl.getUniformLocation(prog, 'u_splats'), splats);
+
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+
+  const p = new Uint8Array(4);
+  gl.readPixels(300, 200, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, p);
+  
+  // Read full canvas stats
+  const all = new Uint8Array(600 * 400 * 4);
+  gl.readPixels(0, 0, 600, 400, gl.RGBA, gl.UNSIGNED_BYTE, all);
+  let maxR = 0, maxG = 0, maxB = 0, nonZero = 0;
+  for (let i = 0; i < all.length; i += 4) {
+    if (all[i] > maxR) maxR = all[i];
+    if (all[i+1] > maxG) maxG = all[i+1];
+    if (all[i+2] > maxB) maxB = all[i+2];
+    if (all[i] > 10 || all[i+1] > 10 || all[i+2] > 10) nonZero++;
+  }
+
+  document.getElementById('res').textContent = JSON.stringify({
+    center: Array.from(p),
+    maxR, maxG, maxB,
+    coloredRatio: (nonZero / (600 * 400)).toFixed(3)
+  });
+</script>
+</body>
+</html>
