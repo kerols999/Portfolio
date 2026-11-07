@@ -97,9 +97,11 @@
 
     /* Fluid Typography with Tight Heading Spacing */
     .fluid-hero {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       font-size: clamp(2.5rem, 6vw + 0.5rem, 4.5rem);
       line-height: 1.05;
-      letter-spacing: -0.04em;
+      letter-spacing: -0.025em;
+      font-weight: 800;
     }
 
     .fluid-h1 {
@@ -122,8 +124,9 @@
     }
 
     /* ----------------------------------------------------
-       RAINBOW GRADIENT BORDER ANIMATION (7 Colors)
-       Red, Orange, Yellow, Green, Blue, Indigo, Violet
+       DELICATE SOFT 3-COLOR GRADIENT BORDER ANIMATION
+       Light Teal (#5eead4) → Light Violet (#c084fc) → Light Pink (#f9a8d4)
+       Very thin (1px) delicate hairline, soft opacity, continuous perimeter
        ---------------------------------------------------- */
     @property --rainbow-angle {
       syntax: '<angle>';
@@ -145,61 +148,54 @@
       position: relative;
       background-color: #090d16;
       border-radius: 0.75rem;
-      transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease;
+      transition: transform 0.25s cubic-bezier(0.2, 0, 0.2, 1), box-shadow 0.3s ease, border-color 0.3s ease;
       will-change: transform;
+    }
+
+    .rainbow-card:hover {
+      border-color: transparent !important;
     }
 
     .rainbow-card::before {
       content: '';
       position: absolute;
-      inset: -1.5px;
-      border-radius: inherit;
-      padding: 1.5px;
+      inset: -1px;
+      border-radius: calc(0.75rem + 1px);
+      padding: 1px;
       background: conic-gradient(from var(--rainbow-angle, 0deg),
-          #ff1744 0%,
-          /* Red */
-          #ff9100 14.3%,
-          /* Orange */
-          #ffea00 28.6%,
-          /* Yellow */
-          #00e676 42.9%,
-          /* Green */
-          #00b0ff 57.2%,
-          /* Blue */
-          #3d5afe 71.5%,
-          /* Indigo */
-          #d500f9 85.8%,
-          /* Violet */
-          #ff1744 100%
-          /* Red loop */
-        );
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+          #5eead4 0%,
+          #c084fc 33.3%,
+          #f9a8d4 66.6%,
+          #5eead4 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) border-box;
       -webkit-mask-composite: xor;
-      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-clip: content-box, border-box;
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0) border-box;
       mask-composite: exclude;
+      mask-clip: content-box, border-box;
       opacity: 0;
-      transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       pointer-events: none;
-      z-index: 3;
+      z-index: 20;
+      box-sizing: border-box;
     }
 
     @media (hover: hover) and (pointer: fine) {
       .rainbow-card:hover::before {
-        opacity: 1;
-        animation: rainbow-spin 3.5s linear infinite;
+        opacity: 0.65;
+        animation: rainbow-spin 4s linear infinite;
       }
 
       .rainbow-card:hover {
-        box-shadow: 0 15px 35px -10px rgba(6, 182, 212, 0.22), 0 0 20px -3px rgba(76, 215, 246, 0.15);
+        box-shadow: 0 0 16px -2px rgba(94, 234, 212, 0.16), 0 0 8px -2px rgba(192, 132, 252, 0.12);
       }
     }
 
     /* ----------------------------------------------------
-       MOUSE REACTIVE GLOW
+       MOUSE REACTIVE GLOW (No overflow:hidden to prevent clipping)
        ---------------------------------------------------- */
     .mouse-glow {
       position: relative;
-      overflow: hidden;
     }
 
     .mouse-glow::after {
@@ -396,7 +392,7 @@
 
       <!-- HERO SECTION -->
       <section
-        class="relative w-full max-w-7xl 2xl:max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 pt-6 sm:pt-12 pb-16 sm:pb-24"
+        class="relative w-full max-w-7xl 2xl:max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 pt-6 sm:pt-12 pb-10 sm:pb-14"
         id="hero">
         <div class="flex flex-col items-start gap-4 sm:gap-6 max-w-4xl reveal">
 
@@ -411,21 +407,19 @@
               contract roles</span>
           </div>
 
-          <!-- Hero Name & Title -->
+          <!-- Hero Name, Subtitle & Location -->
           <div class="flex flex-col gap-2">
-            <h1 class="fluid-hero font-bold text-white tracking-tight">
+            <h1 class="fluid-hero font-extrabold text-white tracking-tight">
               Kerols Raafat
             </h1>
-            <p class="text-xl sm:text-2xl lg:text-3xl font-semibold text-primary tracking-tight">
-              Data Analyst
+            <p class="text-base sm:text-lg lg:text-xl text-slate-300 font-normal font-body tracking-normal">
+              Data Analyst | Business Information Systems (BIS)
             </p>
+            <div class="flex items-center gap-1.5 text-xs sm:text-sm text-text-subtle font-body pt-0.5">
+              <span class="material-symbols-outlined text-sm sm:text-base text-text-subtle">location_on</span>
+              <span>10th of Ramadan City, Egypt</span>
+            </div>
           </div>
-
-          <!-- Tagline -->
-          <p class="text-base sm:text-lg text-text-muted max-w-2xl font-body leading-relaxed">
-            Turning raw data into clear business decisions. Architecting structured pipelines, rigorous statistical
-            telemetry, and executive scorecards that replace assumptions with measurable clarity.
-          </p>
 
           <!-- The Same Three Icon Buttons (GitHub, LinkedIn, Email) in Rounded-Square Minimal Line Style -->
           <div class="flex items-center gap-3 pt-2">
@@ -491,45 +485,11 @@
             </a>
           </div>
         </div>
-
-        <!-- Micro-Metrics Ribbon (3D Tilt + Rainbow Hover) -->
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-12 pt-8 reveal reveal-delay-2">
-
-          <div class="rainbow-card tilt-card mouse-glow flex flex-col gap-1 p-6 border border-white/[0.08]">
-            <div class="flex items-center justify-between">
-              <span class="text-xs uppercase tracking-wider text-text-subtle font-medium">Core Competencies</span>
-              <span class="material-symbols-outlined text-primary text-xl">hub</span>
-            </div>
-            <div class="text-3xl font-bold text-white mt-1">3+</div>
-            <span class="text-xs sm:text-sm text-text-muted font-body">Analytics Frameworks & Pipelines</span>
-          </div>
-
-          <div class="rainbow-card tilt-card mouse-glow flex flex-col gap-1 p-6 border border-white/[0.08]">
-            <div class="flex items-center justify-between">
-              <span class="text-xs uppercase tracking-wider text-text-subtle font-medium">Visual Analytics</span>
-              <span class="material-symbols-outlined text-primary text-xl">bar_chart</span>
-            </div>
-            <div class="text-3xl font-bold text-white mt-1">7+</div>
-            <span class="text-xs sm:text-sm text-text-muted font-body">Executive BI Reports & Dashboards</span>
-          </div>
-
-          <div class="rainbow-card tilt-card mouse-glow flex flex-col gap-1 p-6 border border-white/[0.08]">
-            <div class="flex items-center justify-between">
-              <span class="text-xs uppercase tracking-wider text-text-subtle font-medium">Academic Standing</span>
-              <span class="material-symbols-outlined text-metric-positive text-xl">school</span>
-            </div>
-            <div class="flex items-baseline gap-2 mt-1">
-              <span class="text-3xl font-bold text-white">3.20</span>
-              <span class="text-xs text-text-subtle uppercase">GPA</span>
-            </div>
-            <span class="text-xs sm:text-sm text-text-muted font-body">Business Information Systems Candidate</span>
-          </div>
-
-        </div>
       </section>
 
       <!-- 01 // ABOUT ME SECTION -->
-      <section class="w-full max-w-7xl 2xl:max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 py-16 sm:py-24" id="about">
+      <section class="w-full max-w-7xl 2xl:max-w-[1536px] mx-auto px-4 sm:px-6 lg:px-12 pt-8 sm:pt-12 pb-16 sm:pb-24"
+        id="about">
         <div class="flex items-center gap-2 mb-8 sm:mb-12 reveal">
           <span class="text-xs font-bold tracking-wider uppercase text-primary">01 //</span>
           <h2 class="fluid-h1 font-bold text-white tracking-tight">ABOUT ME</h2>
@@ -542,35 +502,28 @@
           <div class="lg:col-span-7 flex flex-col gap-4 reveal reveal-delay-1">
             <div class="rainbow-card tilt-card mouse-glow p-6 sm:p-8 border border-white/[0.08]">
               <p class="text-base sm:text-lg text-text-primary font-body leading-relaxed mb-4">
-                I am a results-oriented Data Analyst passionate about uncovering actionable business insights hidden
-                within complex datasets. My approach is driven by relentless curiosity and analytical rigor —
-                transforming messy spreadsheets and database tables into intuitive dashboards, predictive models, and
-                strategic narratives.
+                I'm a results-driven Data Analyst passionate about turning messy, complex datasets into clear,
+                actionable business insights. My approach combines analytical rigor with curiosity — cleaning raw data,
+                building interactive dashboards, and surfacing the patterns that actually matter for decision-making.
               </p>
               <p class="text-sm sm:text-base text-text-muted font-body leading-relaxed">
-                I aim to empower organizations to replace gut feelings with verified data-driven decisions that drive
-                measurable growth. Bridging enterprise systems with modern data pipelines, I treat data integrity as a
-                mission-critical engineering standard.
+                I aim to help businesses replace guesswork with evidence — using tools like Excel, SQL, Python, Power
+                BI, and Tableau to turn numbers into a clear story. I'm also expanding into Machine Learning to bring
+                predictive capabilities into my analytical work.
               </p>
             </div>
 
-            <!-- Analytical Philosophy Card -->
-            <div
-              class="rainbow-card tilt-card mouse-glow p-5 border border-white/[0.08] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div class="flex items-center gap-4">
-                <div
-                  class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary shrink-0">
-                  <span class="material-symbols-outlined text-2xl">data_exploration</span>
-                </div>
-                <div class="flex flex-col">
-                  <span class="text-sm font-semibold text-white">Systematic Query Discipline</span>
-                  <span class="text-xs text-text-subtle font-body">Deterministic aggregation, zero assumption
-                    parsing</span>
-                </div>
+            <!-- Clean, Reliable Analysis Card -->
+            <div class="rainbow-card tilt-card mouse-glow p-5 border border-white/[0.08] flex items-center gap-4">
+              <div
+                class="w-10 h-10 rounded-xl bg-surface-container flex items-center justify-center text-primary shrink-0">
+                <span class="material-symbols-outlined text-2xl">verified</span>
               </div>
-              <span
-                class="text-primary uppercase tracking-widest text-[11px] px-3 py-1 rounded-full bg-surface-card border border-white/10 self-start sm:self-auto font-medium">Active
-                Flow</span>
+              <div class="flex flex-col">
+                <span class="text-sm font-semibold text-white">Clean, Reliable Analysis</span>
+                <span class="text-xs text-text-subtle font-body">Well-documented SQL & Python scripts, consistent data
+                  validation.</span>
+              </div>
             </div>
           </div>
 
@@ -610,7 +563,7 @@
               <div>
                 <div class="text-sm font-semibold text-white">Business Performance Metrics</div>
                 <p class="text-xs text-text-muted font-body mt-0.5 leading-normal">KPI formulation, retention analysis,
-                  unit economics, conversion funnels.</p>
+                  sales & revenue trend tracking.</p>
               </div>
             </div>
 
@@ -622,7 +575,7 @@
               <div>
                 <div class="text-sm font-semibold text-white">Statistical Modeling</div>
                 <p class="text-xs text-text-muted font-body mt-0.5 leading-normal">Hypothesis validation, trend
-                  projection, regression baseline modeling.</p>
+                  projection, descriptive statistics.</p>
               </div>
             </div>
 
@@ -639,10 +592,10 @@
           <div class="h-[1px] flex-1 bg-white/10 ml-4 hidden sm:block"></div>
         </div>
 
-        <!-- Symmetrical 3x3 Grid -->
+        <!-- Symmetrical 6-Card Grid (2x3) -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          <!-- Card 1: Data Modeling → Microsoft Excel -->
+          <!-- Card 1: Microsoft Excel -->
           <div
             class="rainbow-card tilt-card mouse-glow p-6 flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-1 group">
             <div>
@@ -654,19 +607,17 @@
               <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Microsoft Excel
               </h3>
               <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
-                Advanced modeling, Power Query transformations, automated Pivot Tables, nested index-match logic, and
-                dynamic financial projections.
+                Advanced modeling, Power Query transformations, automated Pivot Tables, and financial projections.
               </p>
             </div>
             <div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/[0.06]">
               <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Power Query</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">VBA / Macros</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Pivot
-                Architecture</span>
+              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">VBA/Macros</span>
+              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Pivot Tables</span>
             </div>
           </div>
 
-          <!-- Card 2: Database Queries → SQL Systems -->
+          <!-- Card 2: SQL Systems -->
           <div
             class="rainbow-card tilt-card mouse-glow p-6 flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-2 group">
             <div>
@@ -677,40 +628,40 @@
               </div>
               <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">SQL Systems</h3>
               <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
-                PostgreSQL and MySQL querying. Multi-table joins, complex subqueries, CTEs, Window functions, data
-                definition, and query optimization pipelines.
+                MySQL & SQL Server querying — multi-table joins, subqueries, CTEs, and window functions.
               </p>
             </div>
             <div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/[0.06]">
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">PostgreSQL</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Window Functions</span>
+              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">MySQL</span>
+              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">SQL Server</span>
               <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">CTEs</span>
             </div>
           </div>
 
-          <!-- Card 3: Scripting & EDA → Python -->
+          <!-- Card 3: Python -->
           <div
             class="rainbow-card tilt-card mouse-glow p-6 flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-3 group">
             <div>
               <div class="flex items-center justify-between mb-3">
-                <span class="text-[11px] uppercase tracking-wider text-primary font-semibold">Scripting & EDA</span>
+                <span class="text-[11px] uppercase tracking-wider text-primary font-semibold">Scripting &
+                  Analysis</span>
                 <span
                   class="material-symbols-outlined text-primary text-xl group-hover:scale-110 transition-transform">code</span>
               </div>
               <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Python</h3>
               <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
-                Pandas & NumPy for programmatic data wrangling, missing data imputation, robust statistical profiling,
-                and Seaborn/Matplotlib visualizations.
+                Pandas & NumPy for data wrangling and statistical analysis, with Jupyter Notebooks for reproducible,
+                documented analysis workflows.
               </p>
             </div>
             <div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/[0.06]">
               <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Pandas</span>
               <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">NumPy</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Matplotlib</span>
+              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Jupyter</span>
             </div>
           </div>
 
-          <!-- Card 4: Enterprise BI → Power BI -->
+          <!-- Card 4: Power BI -->
           <div
             class="rainbow-card tilt-card mouse-glow p-6 flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-1 group">
             <div>
@@ -721,131 +672,62 @@
               </div>
               <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Power BI</h3>
               <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
-                Interactive executive dashboard building, star schema modeling, calculated DAX measures,
-                time-intelligence formulas, and stakeholder reports.
+                Interactive dashboard building, star schema modeling, calculated DAX measures, and stakeholder reports.
               </p>
             </div>
             <div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/[0.06]">
               <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">DAX</span>
               <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Star Schema</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Interactive UX</span>
+              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Interactive
+                Dashboards</span>
             </div>
           </div>
 
-          <!-- Card 5: Visual Storytelling → Tableau -->
+          <!-- Card 5: Tableau -->
           <div
             class="rainbow-card tilt-card mouse-glow p-6 flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-2 group">
             <div>
               <div class="flex items-center justify-between mb-3">
-                <span class="text-[11px] uppercase tracking-wider text-primary font-semibold">Visual Storytelling</span>
+                <span class="text-[11px] uppercase tracking-wider text-primary font-semibold">Visual Analytics</span>
                 <span
                   class="material-symbols-outlined text-primary text-xl group-hover:scale-110 transition-transform">pie_chart</span>
               </div>
               <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Tableau</h3>
               <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
-                Visual exploratory analytics, parameterized scorecards, custom calculated fields, geospatial maps, and
-                executive narrative flow.
+                Visual exploratory analytics, custom calculated fields, and clear narrative-driven dashboards.
               </p>
             </div>
             <div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/[0.06]">
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Parameters</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Scorecards</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">LOD Calcs</span>
+              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Calculated Fields</span>
+              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Dashboards</span>
+              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Data Viz</span>
             </div>
           </div>
 
-          <!-- Card 6: Notebook Computing → Jupyter Notebooks -->
+          <!-- Card 6: AI & Machine Learning -->
           <div
             class="rainbow-card tilt-card mouse-glow p-6 flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-3 group">
             <div>
               <div class="flex items-center justify-between mb-3">
-                <span class="text-[11px] uppercase tracking-wider text-primary font-semibold">Notebook Computing</span>
-                <span
-                  class="material-symbols-outlined text-primary text-xl group-hover:scale-110 transition-transform">terminal</span>
-              </div>
-              <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Jupyter Notebooks
-              </h3>
-              <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
-                Reproducible analytical pipelines, documentation-first computational workflows, hypothesis validation,
-                and audit-ready data prep.
-              </p>
-            </div>
-            <div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/[0.06]">
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Reproducibility</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Markdown</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">SciPy</span>
-            </div>
-          </div>
-
-          <!-- Card 7: Machine Learning → Core ML Techniques -->
-          <div
-            class="rainbow-card tilt-card mouse-glow p-6 flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-1 group">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-[11px] uppercase tracking-wider text-primary font-semibold">Machine Learning</span>
+                <span class="text-[11px] uppercase tracking-wider text-primary font-semibold">Predictive Modeling</span>
                 <span
                   class="material-symbols-outlined text-primary text-xl group-hover:scale-110 transition-transform">neurology</span>
               </div>
-              <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Core ML
-                Techniques</h3>
+              <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">AI & Machine
+                Learning</h3>
               <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
-                Statistical pattern detection, feature importance modeling, cross-validation scoring, and algorithmic
-                classification for predictive business intelligence.
+                Foundational machine learning and deep learning — supervised/unsupervised learning, model evaluation,
+                and neural network fundamentals (CNNs, RNNs).
               </p>
             </div>
             <div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/[0.06]">
               <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Supervised
                 Learning</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Unsupervised
+              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">UnSupervised
                 Learning</span>
+
+              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Neural Networks</span>
               <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Model Evaluation</span>
-            </div>
-          </div>
-
-          <!-- Card 8: Deep Learning → Neural Networks -->
-          <div
-            class="rainbow-card tilt-card mouse-glow p-6 flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-2 group">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-[11px] uppercase tracking-wider text-primary font-semibold">Deep Learning</span>
-                <span
-                  class="material-symbols-outlined text-primary text-xl group-hover:scale-110 transition-transform">psychology</span>
-              </div>
-              <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Neural Networks
-              </h3>
-              <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
-                Foundational architectures, multi-layer perceptrons, temporal sequence processing, and computer vision
-                classification workflows.
-              </p>
-            </div>
-            <div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/[0.06]">
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">CNNs</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">RNNs</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">NN Fundamentals</span>
-            </div>
-          </div>
-
-          <!-- Card 9: Data Pipelines & ETL → Automated Workflows -->
-          <div
-            class="rainbow-card tilt-card mouse-glow p-6 flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-3 group">
-            <div>
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-[11px] uppercase tracking-wider text-primary font-semibold">Data Engineering</span>
-                <span
-                  class="material-symbols-outlined text-primary text-xl group-hover:scale-110 transition-transform">schema</span>
-              </div>
-              <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Pipeline
-                Architectures</h3>
-              <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
-                Automated data extraction routines, schema validation, batch loading procedures, and enterprise data
-                hygiene standards.
-              </p>
-            </div>
-            <div class="flex flex-wrap gap-1.5 pt-3 border-t border-white/[0.06]">
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">ETL Pipelines</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Data Wrangling</span>
-              <span class="px-2.5 py-1 rounded bg-surface-container text-[11px] text-slate-300">Pipeline
-                Orchestration</span>
             </div>
           </div>
 
@@ -860,72 +742,29 @@
           <div class="h-[1px] flex-1 bg-white/10 ml-4 hidden sm:block"></div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Default 2-Card Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-          <!-- Project 1: NVIDIA Stock Data Analysis -->
+          <!-- Project 1: Olist E-Commerce Analytics (Default Visible) -->
           <div
             class="rainbow-card tilt-card mouse-glow flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-1 group">
 
             <div class="p-6 bg-[#060a12]/90 border-b border-white/[0.06] rounded-t-xl">
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-xs text-text-subtle font-mono">NVIDIA // TIME_SERIES</span>
-                <span class="text-xs text-metric-positive flex items-center gap-1 font-semibold">
-                  <span class="material-symbols-outlined text-xs">trending_up</span> +342.8%
-                </span>
-              </div>
-
-              <div class="w-full h-36 relative flex items-end">
-                <img src="NVIDIA.jpg" alt="NVIDIA Stock Data Analysis" class="w-full h-full object-cover rounded-xl">
-              </div>
-              <div class="flex items-center justify-between pt-2 text-[11px] text-text-subtle font-mono">
-                <span>VOL: 48.2M</span>
-                <span>200-DAY SMA CROSS</span>
-              </div>
-            </div>
-
-            <div class="p-6 flex flex-col justify-between flex-1">
-              <div>
-                <div class="text-xs uppercase tracking-wider text-primary font-semibold mb-1.5">Financial EDA &
-                  Quantitative Momentum</div>
-                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">NVIDIA Stock
-                  Data Analysis</h3>
-                <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
-                  Comprehensive historical financial data analysis examining volatility trends, trading volume
-                  correlations, and moving averages to evaluate tech sector market momentum and risk parameters.
-                </p>
-              </div>
-              <div>
-                <div class="flex flex-wrap gap-1.5 mb-5">
-                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Python</span>
-                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Pandas</span>
-                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Matplotlib</span>
-                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Time Series</span>
-                </div>
-                <button onclick="openProjectModal('nvda')"
-                  class="inline-flex items-center gap-2 text-sm text-primary hover:text-metric-highlight transition-colors font-semibold group/btn">
-                  <span>View Project Analysis</span>
-                  <span
-                    class="material-symbols-outlined text-base transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Project 2: Olist E-Commerce Analytics -->
-          <div
-            class="rainbow-card tilt-card mouse-glow flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-2 group">
-
-            <div class="p-6 bg-[#060a12]/90 border-b border-white/[0.06] rounded-t-xl">
-              <div class="flex items-center justify-between mb-3">
-                <span class="text-xs text-text-subtle font-mono">OLIST // 100K+ RECORDS</span>
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-text-subtle font-mono">OLIST // 99K+ RECORDS</span>
                 <span class="text-xs text-primary flex items-center gap-1 font-semibold">
-                  <span class="material-symbols-outlined text-xs">local_shipping</span> 94.2% On-Time
+                  <span class="material-symbols-outlined text-xs">local_shipping</span> 92% On-Time
                 </span>
               </div>
 
-              <div class="w-full h-36 relative flex items-end">
-                <img src="Olist.png" alt="Olist E-Commerce Analytics" class="w-full h-full object-cover rounded-xl">
+              <!-- Uncropped full size dashboard image -->
+              <div
+                class="w-full min-h-[220px] max-h-[300px] bg-black/60 rounded-xl flex items-center justify-center p-2.5 border border-white/[0.05] overflow-hidden my-3">
+                <img src="Olist.png" alt="Olist E-Commerce Analytics Dashboard"
+                  class="w-full h-auto max-h-[280px] object-contain rounded-lg shadow-md cursor-pointer hover:scale-[1.01] transition-transform duration-300"
+                  onclick="openProjectModal('olist')">
               </div>
+
               <div class="flex items-center justify-between pt-2 text-[11px] text-text-subtle font-mono">
                 <span>STATE: SP, RJ, MG</span>
                 <span>STAR SCHEMA // DAX</span>
@@ -936,8 +775,8 @@
               <div>
                 <div class="text-xs uppercase tracking-wider text-primary font-semibold mb-1.5">E-Commerce Supply Chain
                   & CSAT</div>
-                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">Olist
-                  E-Commerce Analytics</h3>
+                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors cursor-pointer"
+                  onclick="openProjectModal('olist')">Olist E-Commerce Analytics</h3>
                 <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
                   End-to-end customer journey and logistics performance breakdown uncovering delivery lead times,
                   customer satisfaction drivers, and regional sales distribution across 100k+ orders.
@@ -945,35 +784,66 @@
               </div>
               <div>
                 <div class="flex flex-wrap gap-1.5 mb-5">
-                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">SQL</span>
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Power Query</span>
                   <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Power BI</span>
                   <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">DAX</span>
                   <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Logistics</span>
                 </div>
-                <button onclick="openProjectModal('olist')"
-                  class="inline-flex items-center gap-2 text-sm text-primary hover:text-metric-highlight transition-colors font-semibold group/btn">
-                  <span>View Case Study</span>
-                  <span
-                    class="material-symbols-outlined text-base transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
-                </button>
+
+                <!-- Footer with Modal trigger and GitHub / LinkedIn icon buttons -->
+                <div class="flex items-center justify-between pt-4 border-t border-white/[0.06]">
+                  <button onclick="openProjectModal('olist')"
+                    class="inline-flex items-center gap-2 text-sm text-primary hover:text-metric-highlight transition-colors font-semibold group/btn cursor-pointer">
+                    <span>View Case Study & Gallery</span>
+                    <span
+                      class="material-symbols-outlined text-base transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
+                  </button>
+                  <div class="flex items-center gap-2">
+                    <a href="https://github.com/kerols999/Olist-E-commerce" target="_blank" rel="noopener noreferrer"
+                      class="w-9 h-9 rounded-lg bg-surface-container border border-white/10 hover:border-primary/50 text-text-muted hover:text-white hover:bg-surface-container-high transition-all flex items-center justify-center group/icon"
+                      title="View GitHub Repository" aria-label="GitHub Repository">
+                      <svg class="w-4 h-4 fill-current group-hover/icon:text-primary transition-colors"
+                        viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                      </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/posts/kerolsraafat_olist-e-commerce-analytics-end-to-end-ugcPost-7504314282323423232-FjT2/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE-q8UUByOcCHpKMymz3nbR-wdtfNd8kSLw"
+                      target="_blank" rel="noopener noreferrer"
+                      class="w-9 h-9 rounded-lg bg-surface-container border border-white/10 hover:border-primary/50 text-text-muted hover:text-white hover:bg-surface-container-high transition-all flex items-center justify-center group/icon"
+                      title="View LinkedIn Post" aria-label="LinkedIn Post">
+                      <svg class="w-4 h-4 fill-current group-hover/icon:text-[#0a66c2] transition-colors"
+                        viewBox="0 0 24 24">
+                        <path
+                          d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9h2.77v8.37H6.46v-8.37M7.85 6.6a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28Z" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Project 3: HR Attrition Analytics Dashboard -->
+          <!-- Project 2: HR Attrition Analytics Dashboard (Default Visible) -->
           <div
-            class="rainbow-card tilt-card mouse-glow flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-3 group">
+            class="rainbow-card tilt-card mouse-glow flex flex-col justify-between border border-white/[0.08] reveal reveal-delay-2 group">
 
             <div class="p-6 bg-[#060a12]/90 border-b border-white/[0.06] rounded-t-xl">
-              <div class="flex items-center justify-between mb-3">
+              <div class="flex items-center justify-between mb-2">
                 <span class="text-xs text-text-subtle font-mono">HR // WORKFORCE_DIAGNOSTIC</span>
                 <span class="text-xs text-error flex items-center gap-1 font-semibold">
                   <span class="material-symbols-outlined text-xs">warning</span> High Risk: Sales
                 </span>
               </div>
-              <div class="w-full h-36 relative flex items-end">
-                <img src="HR.png" alt="HR Attrition Analytics Dashboard" class="w-full h-full object-cover rounded-xl">
+
+              <!-- Uncropped full size dashboard image -->
+              <div
+                class="w-full min-h-[220px] max-h-[300px] bg-black/60 rounded-xl flex items-center justify-center p-2.5 border border-white/[0.05] overflow-hidden my-3">
+                <img src="HR.png" alt="HR Attrition Analytics Dashboard"
+                  class="w-full h-auto max-h-[280px] object-contain rounded-lg shadow-md cursor-pointer hover:scale-[1.01] transition-transform duration-300"
+                  onclick="openProjectModal('hr')">
               </div>
+
               <div class="flex items-center justify-between pt-2 text-[11px] text-text-subtle font-mono">
                 <span>SAMPLE: 1,470 EMPLOYEES</span>
                 <span>TENURE CORRELATION</span>
@@ -984,8 +854,8 @@
               <div>
                 <div class="text-xs uppercase tracking-wider text-primary font-semibold mb-1.5">Human Capital Diagnostic
                   & Retention</div>
-                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors">HR Attrition
-                  Analytics Dashboard</h3>
+                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors cursor-pointer"
+                  onclick="openProjectModal('hr')">HR Attrition Analytics Dashboard</h3>
                 <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
                   Interactive employee turnover diagnostic identifying key attrition indicators across departments,
                   tenure tiers, and compensation levels to support talent retention strategies.
@@ -993,19 +863,224 @@
               </div>
               <div>
                 <div class="flex flex-wrap gap-1.5 mb-5">
-                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Tableau</span>
-                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Excel</span>
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Power BI</span>
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Power Query</span>
                   <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">KPI
                     Dashboard</span>
                   <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Workforce
                     EDA</span>
                 </div>
-                <button onclick="openProjectModal('hr')"
-                  class="inline-flex items-center gap-2 text-sm text-primary hover:text-metric-highlight transition-colors font-semibold group/btn">
-                  <span>View Dashboard Scorecard</span>
-                  <span
-                    class="material-symbols-outlined text-base transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
-                </button>
+
+                <!-- Footer with Modal trigger and GitHub / LinkedIn icon buttons -->
+                <div class="flex items-center justify-between pt-4 border-t border-white/[0.06]">
+                  <button onclick="openProjectModal('hr')"
+                    class="inline-flex items-center gap-2 text-sm text-primary hover:text-metric-highlight transition-colors font-semibold group/btn cursor-pointer">
+                    <span>View Dashboard & Gallery</span>
+                    <span
+                      class="material-symbols-outlined text-base transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
+                  </button>
+                  <div class="flex items-center gap-2">
+                    <a href="https://github.com/kerols999/IBM-HR-Analytics-Employee-Attrition-Risk-Insights"
+                      target="_blank" rel="noopener noreferrer"
+                      class="w-9 h-9 rounded-lg bg-surface-container border border-white/10 hover:border-primary/50 text-text-muted hover:text-white hover:bg-surface-container-high transition-all flex items-center justify-center group/icon"
+                      title="View GitHub Repository" aria-label="GitHub Repository">
+                      <svg class="w-4 h-4 fill-current group-hover/icon:text-primary transition-colors"
+                        viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                      </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/posts/kerolsraafat_powerbi-dataanalytics-hranalytics-ugcPost-7474162298517954560-yBCP/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE-q8UUByOcCHpKMymz3nbR-wdtfNd8kSLw"
+                      target="_blank" rel="noopener noreferrer"
+                      class="w-9 h-9 rounded-lg bg-surface-container border border-white/10 hover:border-primary/50 text-text-muted hover:text-white hover:bg-surface-container-high transition-all flex items-center justify-center group/icon"
+                      title="View LinkedIn Post" aria-label="LinkedIn Post">
+                      <svg class="w-4 h-4 fill-current group-hover/icon:text-[#0a66c2] transition-colors"
+                        viewBox="0 0 24 24">
+                        <path
+                          d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9h2.77v8.37H6.46v-8.37M7.85 6.6a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28Z" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Toggle Button for More Projects -->
+        <div class="flex justify-center mt-10">
+          <button id="toggleMoreProjectsBtn" onclick="toggleMoreProjects()"
+            class="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-surface-card border border-white/10 hover:border-primary/50 text-white hover:text-primary font-semibold text-sm transition-all shadow-xl hover:shadow-primary/10 group cursor-pointer">
+            <span id="moreProjectsBtnText">More Projects</span>
+            <span class="material-symbols-outlined text-base transition-transform group-hover:translate-x-1"
+              id="moreProjectsBtnIcon">arrow_forward</span>
+          </button>
+        </div>
+
+        <!-- Hidden / Expandable Container for Remaining Projects -->
+        <div id="moreProjectsContainer" class="hidden mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+          <!-- Project 3: UK Railway Analytics (DEPI Graduation Project) -->
+          <div class="rainbow-card tilt-card mouse-glow flex flex-col justify-between border border-white/[0.08] group">
+
+            <div class="p-6 bg-[#060a12]/90 border-b border-white/[0.06] rounded-t-xl">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-text-subtle font-mono">UK RAIL // 31,653 JOURNEYS</span>
+                <span class="text-xs text-metric-positive flex items-center gap-1 font-semibold">
+                  <span class="material-symbols-outlined text-xs">verified</span> 89.9% Model Accuracy
+                </span>
+              </div>
+
+              <!-- Uncropped full size dashboard image -->
+              <div
+                class="w-full min-h-[220px] max-h-[300px] bg-black/60 rounded-xl flex items-center justify-center p-2.5 border border-white/[0.05] overflow-hidden my-3">
+                <img src="K:\OneDrive\Desktop\Portfolio\UK_Rail.png" alt="UK Railway Analytics Tableau Dashboard"
+                  class="w-full h-auto max-h-[280px] object-contain rounded-lg shadow-md cursor-pointer hover:scale-[1.01] transition-transform duration-300"
+                  onclick="openProjectModal('uk_rail')">
+              </div>
+
+              <div class="flex items-center justify-between pt-2 text-[11px] text-text-subtle font-mono">
+                <span>RANDOM FOREST // CLASSIFICATION</span>
+                <span>TABLEAU // 3-VIEW DASHBOARD</span>
+              </div>
+            </div>
+
+            <div class="p-6 flex flex-col justify-between flex-1">
+              <div>
+                <div class="text-xs uppercase tracking-wider text-primary font-semibold mb-1.5">TRANSPORT OPERATIONS &
+                  FORECASTING</div>
+                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors cursor-pointer"
+                  onclick="openProjectModal('uk_rail')">UK Railway Analytics</h3>
+                <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
+                  Led a 6-person team analyzing 31,653 UK train journeys to uncover what was actually driving delay,
+                  cancellation, and refund costs. Cleaned and engineered 6 new features from 18 raw columns in Python,
+                  then built Random Forest models to forecast demand and classify journey status (On
+                  Time/Delayed/Cancelled) at 89.9% accuracy. Delivered a 3-view interactive Tableau dashboard (Overview,
+                  Operations, Classification) for decision-makers.
+                </p>
+              </div>
+              <div>
+                <div class="flex flex-wrap gap-1.5 mb-5">
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Python</span>
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Pandas</span>
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Random
+                    Forest</span>
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Tableau</span>
+                </div>
+
+                <!-- Footer with Modal trigger and GitHub / LinkedIn icon buttons -->
+                <div class="flex items-center justify-between pt-4 border-t border-white/[0.06]">
+                  <button onclick="openProjectModal('uk_rail')"
+                    class="inline-flex items-center gap-2 text-sm text-primary hover:text-metric-highlight transition-colors font-semibold group/btn cursor-pointer">
+                    <span>View Case Study & Gallery</span>
+                    <span
+                      class="material-symbols-outlined text-base transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
+                  </button>
+                  <div class="flex items-center gap-2">
+                    <a href="https://github.com/kerols999/UK-Train-Rides" target="_blank" rel="noopener noreferrer"
+                      class="w-9 h-9 rounded-lg bg-surface-container border border-white/10 hover:border-primary/50 text-text-muted hover:text-white hover:bg-surface-container-high transition-all flex items-center justify-center group/icon"
+                      title="View GitHub Repository" aria-label="GitHub Repository">
+                      <svg class="w-4 h-4 fill-current group-hover/icon:text-primary transition-colors"
+                        viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                      </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/posts/kerolsraafat_depi-digitalegyptpioneersinitiative-dataanalytics-ugcPost-7482479145508122624-YV4H/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE-q8UUByOcCHpKMymz3nbR-wdtfNd8kSLw"
+                      target="_blank" rel="noopener noreferrer"
+                      class="w-9 h-9 rounded-lg bg-surface-container border border-white/10 hover:border-primary/50 text-text-muted hover:text-white hover:bg-surface-container-high transition-all flex items-center justify-center group/icon"
+                      title="View LinkedIn Post" aria-label="LinkedIn Post">
+                      <svg class="w-4 h-4 fill-current group-hover/icon:text-[#0a66c2] transition-colors"
+                        viewBox="0 0 24 24">
+                        <path
+                          d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9h2.77v8.37H6.46v-8.37M7.85 6.6a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28Z" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project 4: NVIDIA Stock Data Analysis -->
+          <div class="rainbow-card tilt-card mouse-glow flex flex-col justify-between border border-white/[0.08] group">
+
+            <div class="p-6 bg-[#060a12]/90 border-b border-white/[0.06] rounded-t-xl">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs text-text-subtle font-mono">NVIDIA // TIME_SERIES</span>
+                <span class="text-xs text-metric-positive flex items-center gap-1 font-semibold">
+                  <span class="material-symbols-outlined text-xs">trending_up</span> +342.8%
+                </span>
+              </div>
+
+              <!-- Uncropped full size dashboard image -->
+              <div
+                class="w-full min-h-[220px] max-h-[300px] bg-black/60 rounded-xl flex items-center justify-center p-2.5 border border-white/[0.05] overflow-hidden my-3">
+                <img src="NVIDIA.jpg" alt="NVIDIA Stock Data Analysis"
+                  class="w-full h-auto max-h-[280px] object-contain rounded-lg shadow-md cursor-pointer hover:scale-[1.01] transition-transform duration-300"
+                  onclick="openProjectModal('nvda')">
+              </div>
+
+              <div class="flex items-center justify-between pt-2 text-[11px] text-text-subtle font-mono">
+                <span>VOL: 48.2M</span>
+                <span>200-DAY SMA CROSS</span>
+              </div>
+            </div>
+
+            <div class="p-6 flex flex-col justify-between flex-1">
+              <div>
+                <div class="text-xs uppercase tracking-wider text-primary font-semibold mb-1.5">Financial EDA &
+                  Quantitative Momentum</div>
+                <h3 class="text-xl font-bold text-white mb-2 group-hover:text-primary transition-colors cursor-pointer"
+                  onclick="openProjectModal('nvda')">NVIDIA Stock Data Analysis</h3>
+                <p class="text-xs sm:text-sm text-text-muted font-body mb-4 leading-relaxed">
+                  Comprehensive historical financial data analysis examining volatility trends, trading volume
+                  correlations, and moving averages to evaluate tech sector market momentum and risk parameters.
+                </p>
+              </div>
+              <div>
+                <div class="flex flex-wrap gap-1.5 mb-5">
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Excel</span>
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Python</span>
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Pandas</span>
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Data
+                    Cleaning</span>
+                  <span class="px-2.5 py-0.5 rounded bg-surface-container text-[11px] text-slate-300">Dashboard</span>
+
+                </div>
+
+                <!-- Footer with Modal trigger and GitHub / LinkedIn icon buttons -->
+                <div class="flex items-center justify-between pt-4 border-t border-white/[0.06]">
+                  <button onclick="openProjectModal('nvda')"
+                    class="inline-flex items-center gap-2 text-sm text-primary hover:text-metric-highlight transition-colors font-semibold group/btn cursor-pointer">
+                    <span>View Project Analysis & Gallery</span>
+                    <span
+                      class="material-symbols-outlined text-base transition-transform group-hover/btn:translate-x-1">arrow_forward</span>
+                  </button>
+                  <div class="flex items-center gap-2">
+                    <a href="https://github.com/kerols999/netflix-data-cleaning-project" target="_blank"
+                      rel="noopener noreferrer"
+                      class="w-9 h-9 rounded-lg bg-surface-container border border-white/10 hover:border-primary/50 text-text-muted hover:text-white hover:bg-surface-container-high transition-all flex items-center justify-center group/icon"
+                      title="View GitHub Repository" aria-label="GitHub Repository">
+                      <svg class="w-4 h-4 fill-current group-hover/icon:text-primary transition-colors"
+                        viewBox="0 0 24 24">
+                        <path fill-rule="evenodd" clip-rule="evenodd"
+                          d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                      </svg>
+                    </a>
+                    <a href="https://www.linkedin.com/posts/kerolsraafat_depi-digitalabregyptabrpioneersabrinitiative-ugcPost-7447811125573738496-EITx/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE-q8UUByOcCHpKMymz3nbR-wdtfNd8kSLw"
+                      target="_blank" rel="noopener noreferrer"
+                      class="w-9 h-9 rounded-lg bg-surface-container border border-white/10 hover:border-primary/50 text-text-muted hover:text-white hover:bg-surface-container-high transition-all flex items-center justify-center group/icon"
+                      title="View LinkedIn Post" aria-label="LinkedIn Post">
+                      <svg class="w-4 h-4 fill-current group-hover/icon:text-[#0a66c2] transition-colors"
+                        viewBox="0 0 24 24">
+                        <path
+                          d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9h2.77v8.37H6.46v-8.37M7.85 6.6a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28Z" />
+                      </svg>
+                    </a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1038,20 +1113,19 @@
                   <div class="text-sm text-primary font-medium mt-0.5">National Telecommunication Institute (NTI)</div>
                 </div>
                 <span
-                  class="px-3 py-1 rounded bg-surface-container text-xs text-text-subtle self-start sm:self-auto border border-white/[0.06]">Recent
-                  / Intensive Training</span>
+                  class="px-3 py-1 rounded bg-surface-container text-xs text-text-subtle self-start sm:self-auto border border-white/[0.06]">Completed</span>
               </div>
               <p class="text-sm sm:text-base text-text-muted font-body leading-relaxed">
-                Explored applied machine learning concepts, automated business intelligence pipelines, and data-driven
-                decision frameworks for enterprise environments. Developed programmatic solutions bridging computational
-                models with executive reporting standards.
+                Part-time trainee at the National Telecommunication Institute (NTI), completing the 'AI for Business'
+                program covering the full pipeline from data analysis fundamentals to applied machine learning and deep
+                learning — including supervised/unsupervised learning, model evaluation, and neural networks (CNNs &
+                RNNs).
               </p>
               <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-white/[0.06]">
-                <span class="px-2.5 py-1 rounded bg-surface-container text-xs text-slate-300">Machine Learning In
-                  BI</span>
-                <span class="px-2.5 py-1 rounded bg-surface-container text-xs text-slate-300">Enterprise
-                  Frameworks</span>
-                <span class="px-2.5 py-1 rounded bg-surface-container text-xs text-slate-300">Decision Telemetry</span>
+                <span class="px-2.5 py-1 rounded bg-surface-container text-xs text-slate-300">Machine Learning
+                  Fundamentals</span>
+                <span class="px-2.5 py-1 rounded bg-surface-container text-xs text-slate-300">Neural Networks</span>
+                <span class="px-2.5 py-1 rounded bg-surface-container text-xs text-slate-300">Deep Learning</span>
               </div>
             </div>
           </div>
@@ -1070,16 +1144,16 @@
                   <div class="text-sm text-primary font-medium mt-0.5">Digital Egypt Pioneers Initiative (DEPI)</div>
                 </div>
                 <span
-                  class="px-3 py-1 rounded bg-surface-container text-xs text-text-subtle self-start sm:self-auto border border-white/[0.06]">Comprehensive
-                  Fellowship</span>
+                  class="px-3 py-1 rounded bg-surface-container text-xs text-text-subtle self-start sm:self-auto border border-white/[0.06]">Completed</span>
               </div>
               <p class="text-sm sm:text-base text-text-muted font-body leading-relaxed">
-                Completed rigorous hands-on training in SQL database querying, advanced data visualization, and Python
-                analytical workflows on real-world industry case studies. Built end-to-end data transformation
-                repositories and KPI monitoring engines.
+                Completed rigorous hands-on training in SQL database querying, Excel modeling, Tableau and Power BI
+                visualization, and Python analytical workflows on real-world industry case studies. Built end-to-end
+                data transformation pipelines and KPI monitoring dashboards.
               </p>
               <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-white/[0.06]">
-                <span class="px-2.5 py-1 rounded bg-surface-container text-xs text-slate-300">PostgreSQL</span>
+                <span class="px-2.5 py-1 rounded bg-surface-container text-xs text-slate-300">MySQL</span>
+                <span class="px-2.5 py-1 rounded bg-surface-container text-xs text-slate-300">Tableau</span>
                 <span class="px-2.5 py-1 rounded bg-surface-container text-xs text-slate-300">Power BI & DAX</span>
                 <span class="px-2.5 py-1 rounded bg-surface-container text-xs text-slate-300">Python Analytics</span>
               </div>
@@ -1267,7 +1341,8 @@
                 </div>
                 <div class="flex flex-col">
                   <span class="text-[11px] uppercase tracking-wider text-text-subtle font-medium">Location</span>
-                  <span class="text-sm font-semibold text-white">Cairo, Egypt (Available Globally / Remote)</span>
+                  <span class="text-sm font-semibold text-white">10th of Ramadan City, Egypt (Available Globally /
+                    Remote)</span>
                 </div>
               </div>
 
@@ -1392,7 +1467,7 @@
 
       <div
         class="pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-4 text-text-subtle text-xs sm:text-sm">
-        <p>© 2024 Kerols Raafat. Data Analyst Portfolio.</p>
+        <p>© 2026 Kerols Raafat. Data Analyst Portfolio.</p>
         <p class="text-xs text-text-subtle font-medium">Precision Telemetry // Modern Data Stack</p>
       </div>
     </div>
@@ -1950,47 +2025,54 @@
     }
 
     // ----------------------------------------------------
-    // 7. PROJECT MODAL CASE STUDY DATA
+    // 7. MORE PROJECTS TOGGLE
+    // ----------------------------------------------------
+    function toggleMoreProjects() {
+      const container = document.getElementById('moreProjectsContainer');
+      const btnText = document.getElementById('moreProjectsBtnText');
+      const btnIcon = document.getElementById('moreProjectsBtnIcon');
+      if (!container) return;
+
+      const isHidden = container.classList.contains('hidden');
+      if (isHidden) {
+        container.classList.remove('hidden');
+        btnText.textContent = 'Fewer Projects';
+        btnIcon.textContent = 'arrow_upward';
+        init3DTiltAndGlow();
+      } else {
+        container.classList.add('hidden');
+        btnText.textContent = 'More Projects';
+        btnIcon.textContent = 'arrow_forward';
+        document.getElementById('projects').scrollIntoView({behavior: 'smooth'});
+      }
+    }
+
+    // ----------------------------------------------------
+    // 8. PROJECT MODAL CASE STUDY DATA & GALLERY
     // ----------------------------------------------------
     const projectDetails = {
-      nvda: {
-        tag: "NVIDIA // TIME_SERIES ANALYSIS",
-        badge: "+342.8% Momentum",
-        title: "NVIDIA Stock Data Analysis",
-        category: "Financial EDA & Quantitative Momentum",
-        stack: ["Python", "Pandas", "NumPy", "Matplotlib", "Seaborn", "Time Series Analysis"],
-        overview: "A deep dive into NVIDIA's daily stock data over multi-year cycles. This project evaluates trading volume surges, moving average crossovers (50-day and 200-day SMA), volatility spikes, and risk-return characteristics during major semiconductor and AI market expansion periods.",
-        metrics: [
-          {label: "Data Scope", val: "5+ Years Daily OHLCV"},
-          {label: "Momentum Metric", val: "+342.8% Multi-cycle"},
-          {label: "Key Signal", val: "Golden Cross (50/200 SMA)"},
-          {label: "Peak Daily Vol", val: "115.4M Shares"}
-        ],
-        highlights: [
-          "Calculated rolling statistics (20, 50, and 200-day simple and exponential moving averages).",
-          "Analyzed daily return distributions, skewness, kurtosis, and computed Value at Risk (VaR 95%).",
-          "Visualized volume-price momentum divergence leading into earnings announcements.",
-          "Generated interactive heatmaps revealing monthly return seasonality and intra-year drawdown clusters."
-        ]
-      },
       olist: {
-        tag: "OLIST // 100K+ E-COMMERCE ORDERS",
-        badge: "94.2% On-Time Delivery Rate",
+        tag: "OLIST // 99K+ E-COMMERCE ORDERS",
+        badge: "92% On-Time Delivery Rate",
         title: "Olist Brazilian E-Commerce Analytics",
         category: "Supply Chain, Logistics & Customer CSAT",
-        stack: ["PostgreSQL", "Power BI", "DAX", "Star Schema", "ETL Pipelines"],
-        overview: "An enterprise-grade analysis of 100,000+ anonymized orders from the Brazilian Olist marketplace. Designed a Star Schema dimensional model to diagnose supply chain bottlenecks, freight costs, and the direct correlation between delivery lead time deviations and customer satisfaction reviews.",
+        image: "Olist.png",
+        github: "https://github.com/kerols999/Olist-E-commerce",
+        linkedin: "https://www.linkedin.com/posts/kerolsraafat_olist-e-commerce-analytics-end-to-end-ugcPost-7504314282323423232-FjT2/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE-q8UUByOcCHpKMymz3nbR-wdtfNd8kSLw",
+        gallery: ["Olist.png"],
+        stack: ["Power BI", "DAX", "Star Schema", "ETL Pipelines"],
+        overview: "An enterprise-grade analysis of 99,000+ anonymized orders from the Brazilian Olist marketplace. Designed a Star Schema dimensional model to diagnose supply chain bottlenecks, freight costs, and the direct correlation between delivery lead time deviations and customer satisfaction reviews.",
         metrics: [
-          {label: "Total Orders", val: "100k+ Transactions"},
-          {label: "Total Revenue", val: "R$ 13.59 Million"},
-          {label: "Avg Delivery", val: "12.5 Days"},
-          {label: "Customer CSAT", val: "4.07 / 5.00"}
+          {label: "Total Orders", val: "99k+ Transactions"},
+          {label: "Total Revenue", val: "R$ 13.5 Million"},
+          {label: "Avg Delivery", val: "11.5 Days"},
+          {label: "Customer CSAT", val: "4.09 / 5.00"}
         ],
         highlights: [
-          "Modeled relational database into Star Schema (Fact Orders, Dim Customer, Dim Geolocation, Dim Product).",
-          "Formulated complex DAX measures: Dynamic Lead Time Variance, MoM Revenue Growth, and Churn Tiers.",
-          "Identified that orders delivered 3+ days ahead of SLA achieved 4.8+ average CSAT rating, whereas delays over 2 days dropped ratings below 1.9.",
-          "Delivered interactive Power BI drill-down map isolating regional freight inefficiencies in Northern Brazil."
+          "Modeled 9 relational tables into a Star Schema and created a custom Date Dimension.",
+          "Developed advanced DAX measures for Revenue Growth, Delivery Performance, and Lead Time Analysis.",
+          "Built a 5-page interactive Power BI dashboard covering Sales, Delivery, Customer Satisfaction, and Payments.",
+          "Uncovered key business insights into delivery delays, customer satisfaction, regional shipping inefficiencies, and sales trends."
         ]
       },
       hr: {
@@ -1998,19 +2080,71 @@
         badge: "High Risk: Sales Department (23.8%)",
         title: "HR Attrition Analytics Dashboard",
         category: "Human Capital Diagnostic & Workforce Retention",
-        stack: ["Tableau", "Microsoft Excel", "Power Query", "Statistical Hypothesis Testing"],
-        overview: "A comprehensive workforce diagnostic dashboard analyzing 1,470 employee records to uncover the root drivers of talent turnover. Identified high-risk flight profiles across job roles, overtime hours, compensation tiers, and work-life balance scores.",
+        image: "HR.png",
+        github: "https://github.com/kerols999/IBM-HR-Analytics-Employee-Attrition-Risk-Insights",
+        linkedin: "https://www.linkedin.com/posts/kerolsraafat_powerbi-dataanalytics-hranalytics-ugcPost-7474162298517954560-yBCP/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE-q8UUByOcCHpKMymz3nbR-wdtfNd8kSLw",
+        gallery: ["HR.png"],
+        stack: ["Excel", "Power Query"],
+        overview: "An HR Attrition Analytics Dashboard built with Power BI analyzing 1,470 employee records to uncover turnover drivers. Identified key attrition patterns across Overtime, Promotion Cycles, Compensation, and Business Travel. Developed a Work-Life Balance profiling system to help HR proactively identify and retain current high-risk employees.",
         metrics: [
           {label: "Employees Analyzed", val: "1,470 Personnel"},
-          {label: "Overall Attrition", val: "14.2% Turnover"},
-          {label: "Highest Risk Dept", val: "Sales (23.8%)"},
-          {label: "Lowest Risk Dept", val: "R&D (8.5%)"}
+          {label: "Overall Attrition", val: "16.1% Turnover"},
+          {label: "Highest Risk Role", val: "Sales Reps (40%)"},
+          {label: "Top Attrition Driver", val: "Overtime"}
         ],
         highlights: [
-          "Cleaned, normalized, and categorized workforce records in Excel Power Query before ingestion.",
-          "Built Tableau parameterized scorecards allowing department heads to simulate retention impact of reducing overtime.",
-          "Discovered that employees working frequent overtime experienced a 3x higher turnover probability regardless of salary band.",
-          "Recommended structured compensation re-evaluations for early-career roles (tenure 1-3 years), reducing projected turnover by 18%."
+          "Identified key attrition drivers across 1,470 employee records using Power BI, including the impact of Overtime, Promotion Cycles, and Business Travel.",
+          "Discovered that Sales Representatives faced the highest attrition risk (~40%), driven significantly by frequent overtime.",
+          "Developed a Satisfaction & Work-Life Balance profiling system to identify current high-risk employees, enabling proactive HR interventions.",
+          "Delivered strategic recommendations to restructure overtime, clarify promotion cycles, re-evaluate compensation, and support new hires in their first 3 years."
+        ]
+      },
+      uk_rail: {
+        tag: "UK RAIL // 31,653 JOURNEYS",
+        badge: "89.9% Model Accuracy",
+        title: "UK Railway Analytics",
+        category: "TRANSPORT OPERATIONS & FORECASTING",
+        image: "UK_Rail.png",
+        github: "https://github.com/kerols999/UK-Train-Rides",
+        linkedin: "https://www.linkedin.com/posts/kerolsraafat_depi-digitalegyptpioneersinitiative-dataanalytics-ugcPost-7482479145508122624-YV4H/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE-q8UUByOcCHpKMymz3nbR-wdtfNd8kSLw",
+        gallery: ["UK_Rail.svg"],
+        stack: ["Python", "Pandas", "Random Forest", "Tableau", "Scikit-Learn"],
+        overview: "Led a 6-person team analyzing 31,653 UK train journeys to uncover what was actually driving delay, cancellation, and refund costs. Cleaned and engineered 6 new features from 18 raw columns in Python, then built Random Forest models to forecast demand and classify journey status (On Time/Delayed/Cancelled) at 89.9% accuracy. Delivered a 3-view interactive Tableau dashboard (Overview, Operations, Classification) for decision-makers.",
+        metrics: [
+          {label: "Journeys Analyzed", val: "31,653 Records"},
+          {label: "Model Accuracy", val: "89.9% Classification"},
+          {label: "Delay Drivers", val: "64.2% Weather/Signals"},
+          {label: "Tableau Views", val: "3-View Dashboard"}
+        ],
+        highlights: [
+          "Led a 6-person team through end-to-end exploratory data analysis and predictive pipeline development.",
+          "Cleaned and engineered 6 new features from 18 raw journey attributes using Python and Pandas.",
+          "Built Random Forest machine learning models to classify journey status (On Time/Delayed/Cancelled) at 89.9% accuracy.",
+          "Delivered a 3-view interactive Tableau dashboard (Overview, Operations, Classification) optimizing schedule reliability and refund tracking."
+        ]
+      },
+      nvda: {
+        tag: "NVIDIA // TIME_SERIES ANALYSIS",
+        badge: "+342.8% Momentum",
+        title: "NVIDIA Stock Data Analysis",
+        category: "Financial EDA & Quantitative Momentum",
+        image: "NVIDIA.jpg",
+        github: "https://github.com/kerols999/netflix-data-cleaning-project",
+        linkedin: "https://www.linkedin.com/posts/kerolsraafat_depi-digitalabregyptabrpioneersabrinitiative-ugcPost-7447811125573738496-EITx/?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE-q8UUByOcCHpKMymz3nbR-wdtfNd8kSLw",
+        gallery: ["NVIDIA.jpg"],
+        stack: ["Excel", "Python", "Pandas", "Matplotlib", "Data Cleaning", "Dashboard"],
+        overview: "A deep dive into NVIDIA's daily stock data over multi-year cycles. This project evaluates trading volume surges, moving average crossovers (50-day and 200-day SMA), volatility spikes, and risk-return characteristics during major semiconductor and AI market expansion periods.",
+        metrics: [
+          {label: "All-Time High", val: "$207.28"},
+          {label: "Market Cap", val: "$4 Trillion+"},
+          {label: "Revenue Growth", val: "374%"},
+          {label: "2024 Surge", val: "193.5%"}
+        ],
+        highlights: [
+          "leaned historical financial data (1999–2026) using Python, and built an Interactive Dashboard with Excel Pivot Tables.",
+          "Highlighted key market milestones, including NVIDIA's $207.28 all-time high and surpassing the $4 Trillion market cap.",
+          "Analyzed historical trends to identify top investment years, showcasing 293.30% growth in 2000 and a 193.54% surge in 2024.",
+          "Outlined the impact of the AI era and the strategic 10-for-1 stock split on driving a 374% revenue growth."
         ]
       }
     };
@@ -2022,14 +2156,52 @@
       const container = document.getElementById('modalContent');
       container.innerHTML = `
         <div class="flex flex-col gap-4 font-sans">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-white/10 pb-3">
-            <span class="text-xs text-text-subtle font-mono">${data.tag}</span>
-            <span class="px-2.5 py-0.5 rounded-full bg-surface-container text-xs font-semibold text-primary">${data.badge}</span>
+          <!-- Modal Header -->
+          <div class="flex flex-wrap items-center justify-between gap-3 border-b border-white/10 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-text-subtle font-mono">${data.tag}</span>
+              <span class="px-2.5 py-0.5 rounded-full bg-surface-container text-xs font-semibold text-primary border border-white/10">${data.badge}</span>
+            </div>
+            <!-- Quick Icon Links -->
+            <div class="flex items-center gap-2">
+              ${data.github ? `
+                <a href="${data.github}" target="_blank" rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high border border-white/10 text-xs font-medium text-white hover:text-primary transition-colors" title="GitHub Repository">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                  <span>GitHub</span>
+                </a>
+              ` : ''}
+              ${data.linkedin ? `
+                <a href="${data.linkedin}" target="_blank" rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high border border-white/10 text-xs font-medium text-white hover:text-[#0a66c2] transition-colors" title="LinkedIn Post">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9h2.77v8.37H6.46v-8.37M7.85 6.6a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28Z"/></svg>
+                  <span>LinkedIn</span>
+                </a>
+              ` : ''}
+            </div>
           </div>
 
           <div>
             <div class="text-xs uppercase tracking-wider text-primary font-semibold">${data.category}</div>
             <h2 class="text-2xl font-bold text-white mt-1">${data.title}</h2>
+          </div>
+
+          <!-- Uncropped Full-Size Interactive Image Gallery View -->
+          <div class="w-full bg-[#03060c] rounded-xl p-3 border border-white/10 flex flex-col items-center justify-center my-1">
+            <img id="modalMainImg" src="${data.image}" alt="${data.title}" class="w-full h-auto max-h-[380px] object-contain rounded-lg shadow-2xl">
+            <!-- Gallery Thumbnails & Upload Readiness -->
+            <div class="flex items-center gap-2 mt-3 pt-3 border-t border-white/[0.08] w-full overflow-x-auto pb-1">
+              <span class="text-[11px] text-text-subtle font-mono uppercase shrink-0 mr-1">Gallery:</span>
+              ${data.gallery.map((img, idx) => `
+                <button onclick="document.getElementById('modalMainImg').src='${img}'" class="w-14 h-10 rounded border border-primary/60 overflow-hidden bg-black/40 hover:border-primary transition-all shrink-0 p-0.5">
+                  <img src="${img}" class="w-full h-full object-cover rounded-sm">
+                </button>
+              `).join('')}
+              <div class="h-10 px-3 rounded border border-dashed border-white/20 flex items-center gap-1.5 text-text-subtle text-[11px] font-mono shrink-0" title="Additional screenshots upload slot">
+                <span class="material-symbols-outlined text-sm">photo_library</span>
+                <span>Screenshots slot</span>
+              </div>
+            </div>
           </div>
 
           <p class="text-text-muted font-body leading-relaxed text-sm sm:text-base">${data.overview}</p>
@@ -2062,14 +2234,22 @@
             </div>
           </div>
 
-          <div class="flex items-center justify-end gap-3 pt-4 border-t border-white/10">
-            <button onclick="closeProjectModal()" class="px-4 py-2 rounded-xl bg-surface-container text-sm font-medium hover:bg-surface-container-high text-white transition-colors">
+          <div class="flex items-center justify-between gap-3 pt-4 border-t border-white/10">
+            <button onclick="closeProjectModal()" class="px-4 py-2 rounded-xl bg-surface-container text-sm font-medium hover:bg-surface-container-high text-white transition-colors cursor-pointer">
               Close
             </button>
-            <a href="#contact" onclick="closeProjectModal()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary-container text-sm font-semibold hover:bg-metric-highlight transition-colors shadow-sm">
-              <span>Inquire About This Project</span>
-              <span class="material-symbols-outlined text-base">arrow_forward</span>
-            </a>
+            <div class="flex items-center gap-2">
+              ${data.github ? `
+                <a href="${data.github}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-white/10 text-sm font-semibold text-white hover:text-primary transition-colors">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+                  <span>Code</span>
+                </a>
+              ` : ''}
+              <a href="#contact" onclick="closeProjectModal()" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-primary text-on-primary-container text-sm font-semibold hover:bg-metric-highlight transition-colors shadow-sm">
+                <span>Inquire About Project</span>
+                <span class="material-symbols-outlined text-base">arrow_forward</span>
+              </a>
+            </div>
           </div>
         </div>
       `;
